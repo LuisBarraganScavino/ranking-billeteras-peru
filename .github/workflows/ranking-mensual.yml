@@ -42,6 +42,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add datos_*.csv
+          git add datos_*.csv iconos_*.json calidad_servicio_*.csv
           git diff --cached --quiet || git commit -m "Datos ranking billeteras $(date +'%Y-%m-%d')"
           git push
