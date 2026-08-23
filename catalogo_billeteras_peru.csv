@@ -1,0 +1,62 @@
+nombre,institucion,servicio,app_id_android,app_id_ios
+Agora,Intercorp,Prepago,pe.indigital.tunki.user,1478814349
+Alfin Banco,Intercorp,Prepago,com.alfinbanco.appclientes,1600550967
+Aqku Wallet,Cripto,Fintech,com.aqu.wallet,
+B89,Fintech,Prepago,io.b89.berlin,
+BanBif App,Banco,Banca movil,pe.com.banbif.pnappmobile,6736497481
+Banca Movil Banca GNB,Banco,Banca movil,com.bm_gnb_pe,1404468440
+Banca Móvil BCP,Banco,Banca movil,com.bcp.bank.bcp,777961079
+Banco de Comercio BANCOM,Banco,Banca movil,pe.com.bancomercio.mobilebanking,1292389817
+Banco de la Nación,Banco,Banca movil,pe.com.bn.app.bancodelanacion,1316766665
+Banco Falabella Perú,Banco,Banca movil,per.bf.desa,1146852398
+Banco Pichincha Perú,Banco,Banca movil,pe.pichincha.bm,1476717951
+Banco Ripley Perú,Banco,Banca movil,com.ripley.banco.peru,1425352352
+Banex Coin,Fintech (exchange cripto),Exchange cripto,com.banexcoin.app.mobile,
+BBVA Perú,Banco,Banca movil,com.bbva.nxt_peru,569453542
+BIM,PDP S.A.,Billetera celular,com.pdp.bim,1361333457
+BIpay,Bitel,Billetera digital,com.bitel.bipay,6449612131
+Bonus,Retail (Loyalty Perú),Prepago,com.bonus.bonus,6581479818
+Caja Arequipa,Caja Municipal,Consulta de saldos y pagos,com.cmac.cajamovilaqp,1327010765
+Caja Cusco - Wayki App,Caja Municipal,Consulta de saldos y pagos,com.pe.cajacusco.movil,1495718202
+Caja Huancayo App,Caja Municipal,Consulta de saldos y pagos,com.cajahuancayo.cajahuancayo.appcajahuancayo,1423332783
+Caja Ica App,Caja Municipal,Consulta de saldos y pagos,com.cmacica.prd,1588120077
+Caja Piura App,Caja Municipal,Consulta de saldos y pagos,pe.cajapiura.bancamovil,1460146299
+Caja Tacna App,Caja Municipal,Consulta de saldos y pagos,com.cajatacna.droid,1483684216
+Caja Trujillo,Caja Municipal,Consulta de saldos y pagos,com.appcajatrujillo,1478808027
+Banco Compartamos,Banco,Consulta de saldos y pagos,pe.com.compartamos.bancamovil,1373822958
+Coopac Abaco,Cooperativa,Consulta de saldos y pagos,com.abaco.movil,1295207377
+Coopac San Cristobal de Huamanga,Cooperativa,Consulta de saldos y pagos,org.cacsch.saldomatico,
+Coopac San Isidro,Cooperativa,Consulta de saldos y pagos,pe.coopac.huaral.app_banking,1562042137
+Coopac San Miguel,Cooperativa,Consulta de saldos y pagos,pe.com.bankingly.Pe_SanMiguel,6748830250
+Coopac Santa Maria Movil,Cooperativa,Consulta de saldos y pagos,pe.com.coopsantamariaenlinea.coopemovilsmm,
+Credinka,Financiera,Consulta de saldos y pagos,com.credinkamovil.pe,
+CrediScotia,Financiera,Consulta de saldos y pagos,pe.com.scotiabank.blpm.android.client.csf,
+Cuenta DNI Perú (Banco de la Nación),Banco de la Nación,Consulta de saldos,com.bnp.banking,1603915531
+Diners Club Perú,Tarjeta de Crédito,App tarjeta de crédito,pe.solera.diners,1313509509
+Financiera Confianza,Financiera,Consulta de saldos y pagos,pe.confianza.cliente,6482482510
+Efectibank,Financiera,Billetera Digital,com.efectivadigital.appclientes,1612870657
+FPay Perú,Grupo Falabella,Pago sin contacto desde el celular,com.fif.fpay.android.pe,1512019695
+Global66,Fintech chilena (Global 81),Multi-moneda,com.global66.cards,1494957339
+Google Wallet Perú,Google,Pago sin contacto,com.google.android.apps.walletnfcrel,
+Inspira te Ilumina,Educación financiera (Sof.ia),App educativa,com.sofia.inspira,6471895711
+Interbank App,Banco,Banca movil,pe.com.interbank.mobilebanking,378649517
+io,Banco (marca digital BCP),Banca movil,pe.io,1658364787
+Jet Cash,EEDE Jet Perú,Remesas de dinero,com.mobilcash.jetperuandroid,
+Kontigo,EEDE Gmoney,Prepago,pe.com.kontigo.neobank,1564451292
+Ligo,EEDE TPP (Tarjetas Peruanas Prepago),Prepago,pe.com.tarjetasperuanasprepago.tppapp,1494213766
+Mibanco,Banco,Banca movil,com.mibanco.bancamovil,1437814246
+Movil Caja Sullana,Caja Municipal,Consulta de saldos y pagos,com.pe.cajasullana.cajamovil,
+Máximo Tarjeta,Fintech (Alfin Banco),Prepago,maximo.peru.pe,
+P51,Caja Arequipa,Wallet,com.cajaarq.p51,6499224447
+Pacinet Móvil,Cooperativa,Consulta de saldos y pagos,com.pacinetmobile,1440431919
+Prex Perú,Fintech,Prepago,air.PrexPeru,1562711270
+Qapaq,Financiera,Consulta de saldos y pagos,com.qapaq.banking,1532922633
+Scotiabank Perú App,Banco,Banca movil,pe.com.scotiabank.blpm.android.client,429948194
+Sip,Infinance XP (grupo Intercorp),"Billetera digital (cuentas, tarjetas, ahorros, cashback)",pe.solera.tarjetaoh,1117151689
+Tarjeta W,Grupo Wong,Pagos QR y Transferencias,pe.com.tarjetaw.android.client.prod,
+Tulkit,Fintech,Consulta de saldos y pagos,com.tulkitpay.crypto,1536522093
+Yape,BCP,Pagos por celular P2P,com.bcp.innovacxion.yapeapp,1147249919
+Panda,GMoney S.A.,Billetera digital multimoneda,pe.com.panda.neobank,6451249413
+Lemon: Billetera Virtual,Lemon Cash Inc.,Cripto-billetera,com.applemoncash,1499421511
+Coopac Norandino WalletOn,Coopac Norandino / FENACREP,Billetera digital cooperativa,com.wdt.banking.norandino,
+Takenos,Takenos (fintech argentina),Cuenta multimoneda para freelancers,com.takenos,6499217598
