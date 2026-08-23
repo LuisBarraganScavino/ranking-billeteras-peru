@@ -204,9 +204,13 @@ def fetch_calidad_servicio(app_id, count=RESENAS_1ESTRELLA_COUNT):
 
 def descargar_icono_b64(url):
     """Descarga un icono, lo reduce a ICON_MAX_SIZE px y lo devuelve como data URI base64.
-    Devuelve None si algo falla — nunca detiene la corrida ni el resto de la extracción."""
-    if not url or not HAS_PIL:
-        return None
+    Devuelve (b64_o_None, motivo_de_error_o_None) — nunca detiene la corrida ni el resto de
+    la extracción, pero ahora sí reporta POR QUÉ falló cada icono (antes fallaba en silencio,
+    lo que hacía imposible diagnosticar por qué el JSON de iconos salía vacío)."""
+    if not url:
+        return None, "sin URL de icono (ni Android ni iOS trajeron una)"
+    if not HAS_PIL:
+        return None, "Pillow no está disponible en este entorno (revisar 'pip install -r requirements.txt')"
     try:
         resp = requests.get(url, timeout=15)
         resp.raise_for_status()
@@ -216,9 +220,9 @@ def descargar_icono_b64(url):
         img.save(buf, format="PNG", optimize=True)
         import base64
         b64 = base64.b64encode(buf.getvalue()).decode("ascii")
-        return f"data:image/png;base64,{b64}"
-    except Exception:  # noqa: BLE001 - un icono roto nunca debe tumbar la corrida
-        return None
+        return f"data:image/png;base64,{b64}", None
+    except Exception as e:  # noqa: BLE001 - un icono roto nunca debe tumbar la corrida
+        return None, f"error: {e}"
 
 
 def main():
@@ -240,6 +244,11 @@ def main():
 
     catalog = load_catalog()
     fecha_extraccion = datetime.date.today().isoformat()
+
+    print(f"Pillow disponible (necesario para procesar iconos): {HAS_PIL}", flush=True)
+    if not HAS_PIL:
+        print("    -> Si esto dice False, revisa el paso 'Instalar dependencias' del workflow: "
+              "algo impidió que Pillow se instalara pese a estar en requirements.txt.", flush=True)
 
     android_rows = []
     ios_rows = []
@@ -312,10 +321,14 @@ def main():
         if not args.skip_icons:
             icono_url = a.get("icono_url") or b.get("icono_url")
             if icono_url:
-                b64 = descargar_icono_b64(icono_url)
+                b64, icon_err = descargar_icono_b64(icono_url)
                 if b64:
                     iconos[nombre] = b64
+                else:
+                    print(f"    Icono: {icon_err}", flush=True)
                 time.sleep(0.5)
+            else:
+                print("    Icono: sin URL (ni Android ni iOS trajeron un icono este mes)", flush=True)
 
         time.sleep(REQUEST_DELAY_SECONDS)
 
