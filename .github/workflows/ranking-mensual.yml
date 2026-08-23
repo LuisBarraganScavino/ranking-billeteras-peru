@@ -1,0 +1,47 @@
+name: Ranking mensual de billeteras
+
+on:
+  schedule:
+    # 14:00 UTC = 09:00 hora Perú (UTC-5), el día 1 de cada mes.
+    # Para cambiar el día/hora, edita esta línea (cron en UTC).
+    - cron: "0 14 1 * *"
+  workflow_dispatch:
+    inputs:
+      month:
+        description: "Mes a extraer en formato YYYY-MM. Vacío = mes actual."
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Instalar dependencias
+        run: pip install -r requirements.txt
+
+      - name: Ejecutar extracción
+        run: |
+          if [ -n "${{ github.event.inputs.month }}" ]; then
+            python extract_ranking.py --month "${{ github.event.inputs.month }}"
+          else
+            python extract_ranking.py
+          fi
+
+      - name: Commit y push de los datos del mes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add datos_*.csv
+          git diff --cached --quiet || git commit -m "Datos ranking billeteras $(date +'%Y-%m-%d')"
+          git push
