@@ -28,7 +28,16 @@ jobs:
           python-version: "3.11"
 
       - name: Instalar dependencias
-        run: pip install -r requirements.txt
+        run: |
+          echo "--- Contenido de requirements.txt ---"
+          cat requirements.txt
+          echo "--------------------------------------"
+          pip install -r requirements.txt
+
+      - name: Verificar que Pillow quedó instalado
+        run: |
+          pip show Pillow || echo "RESULTADO: Pillow NO aparece instalado (pip show no lo encontró)."
+          python -c "from PIL import Image; print('RESULTADO: PIL se importa correctamente')" || echo "RESULTADO: PIL NO se puede importar en Python."
 
       - name: Ejecutar extracción
         run: |
