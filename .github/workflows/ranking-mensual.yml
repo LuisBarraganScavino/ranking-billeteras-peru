@@ -2,9 +2,9 @@ name: Ranking mensual de billeteras
 
 on:
   schedule:
-    # 14:00 UTC = 09:00 hora Perú (UTC-5), el día 1 de cada mes.
-    # Para cambiar el día/hora, edita esta línea (cron en UTC).
-    - cron: "0 14 1 * *"
+    # 14:00 UTC = 09:00 hora Perú. Se dispara los días 28 al 31 de cada mes y el
+    # paso "Verificar" deja continuar solo el último día real del mes.
+    - cron: "0 14 28-31 * *"
   workflow_dispatch:
     inputs:
       month:
@@ -15,31 +15,47 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: ranking-mensual
+  cancel-in-progress: false
+
 jobs:
   extract:
     runs-on: ubuntu-latest
+    timeout-minutes: 60
     steps:
+      - name: Verificar si hoy es el último día del mes
+        id: gate
+        run: |
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            if [ "$(TZ=America/Lima date -d 'tomorrow' +%d)" = "01" ]; then
+              echo "run=true" >> "$GITHUB_OUTPUT"
+              echo "Hoy es el último día del mes en Lima: se ejecuta la extracción."
+            else
+              echo "run=false" >> "$GITHUB_OUTPUT"
+              echo "Hoy no es el último día del mes: no se hace nada."
+            fi
+          else
+            echo "run=true" >> "$GITHUB_OUTPUT"
+            echo "Ejecución manual: se ejecuta la extracción."
+          fi
+
       - name: Checkout repo
+        if: steps.gate.outputs.run == 'true'
         uses: actions/checkout@v6
 
       - name: Set up Python
+        if: steps.gate.outputs.run == 'true'
         uses: actions/setup-python@v6
         with:
           python-version: "3.11"
 
       - name: Instalar dependencias
-        run: |
-          echo "--- Contenido de requirements.txt ---"
-          cat requirements.txt
-          echo "--------------------------------------"
-          pip install -r requirements.txt
-
-      - name: Verificar que Pillow quedó instalado
-        run: |
-          pip show Pillow || echo "RESULTADO: Pillow NO aparece instalado (pip show no lo encontró)."
-          python -c "from PIL import Image; print('RESULTADO: PIL se importa correctamente')" || echo "RESULTADO: PIL NO se puede importar en Python."
+        if: steps.gate.outputs.run == 'true'
+        run: pip install -r requirements.txt
 
       - name: Ejecutar extracción
+        if: steps.gate.outputs.run == 'true'
         run: |
           if [ -n "${{ github.event.inputs.month }}" ]; then
             python extract_ranking.py --month "${{ github.event.inputs.month }}"
@@ -48,9 +64,11 @@ jobs:
           fi
 
       - name: Commit y push de los datos del mes
+        if: steps.gate.outputs.run == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add datos_*.csv iconos_*.json calidad_servicio_*.csv
-          git diff --cached --quiet || git commit -m "Datos ranking billeteras $(date +'%Y-%m-%d')"
+          git diff --cached --quiet || git commit -m "Datos ranking billeteras $(TZ=America/Lima date +'%Y-%m-%d')"
+          git pull --rebase
           git push
