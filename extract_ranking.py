@@ -32,6 +32,11 @@ de iconos y el dashboard usa un avatar de respaldo.
 Uso:
   python extract_ranking.py                  # usa el mes actual (UTC)
   python extract_ranking.py --month 2026-08   # fuerza un mes (pruebas / backfill)
+  python extract_ranking.py --semanal         # captura semanal: solo Android + iOS, sin iconos
+                                              # ni calidad de servicio; escribe en semanal/
+                                              #   semanal/datos_YYYY-MM-DD.csv
+                                              #   semanal/datos_YYYY-MM-DD_ios.csv
+                                              # (YYYY-MM-DD = fecha de la captura)
 """
 import argparse
 import csv
@@ -229,6 +234,10 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--month", default=None,
                          help="Mes a extraer en formato YYYY-MM (default: mes actual, UTC).")
+    parser.add_argument("--semanal", action="store_true",
+                         help="Captura semanal: guarda solo Android e iOS en semanal/ con la fecha "
+                              "del día (sin iconos ni calidad de servicio). Sin esta opción el "
+                              "script funciona exactamente igual que antes.")
     parser.add_argument("--skip-icons", action="store_true",
                          help="No descargar iconos (corre más rápido, útil para pruebas).")
     args = parser.parse_args()
@@ -282,22 +291,23 @@ def main():
             print(f"    Android: {a['error']}", flush=True)
         time.sleep(REQUEST_DELAY_SECONDS)
 
-        c = fetch_calidad_servicio(row.get("app_id_android", ""))
-        calidad_rows.append({
-            "nombre": nombre,
-            "institucion": row.get("institucion", ""),
-            "servicio": row.get("servicio", ""),
-            "app_id_android": row.get("app_id_android", ""),
-            "resenas_1estrella_analizadas": c.get("resenas_analizadas") if c.get("resenas_analizadas") is not None else "s/d",
-            "resenas_1estrella_respondidas": c.get("resenas_respondidas") if c.get("resenas_respondidas") is not None else "s/d",
-            "pct_respondidas": c.get("pct_respondidas") if c.get("pct_respondidas") is not None else "s/d",
-            "tiempo_respuesta_promedio_dias": c.get("tiempo_respuesta_promedio_dias") if c.get("tiempo_respuesta_promedio_dias") is not None else "s/d",
-            "fecha_extraccion": fecha_extraccion,
-            "error": c.get("error") or "",
-        })
-        if c.get("error"):
-            print(f"    Calidad de servicio: {c['error']}", flush=True)
-        time.sleep(REQUEST_DELAY_SECONDS)
+        if not args.semanal:
+            c = fetch_calidad_servicio(row.get("app_id_android", ""))
+            calidad_rows.append({
+                "nombre": nombre,
+                "institucion": row.get("institucion", ""),
+                "servicio": row.get("servicio", ""),
+                "app_id_android": row.get("app_id_android", ""),
+                "resenas_1estrella_analizadas": c.get("resenas_analizadas") if c.get("resenas_analizadas") is not None else "s/d",
+                "resenas_1estrella_respondidas": c.get("resenas_respondidas") if c.get("resenas_respondidas") is not None else "s/d",
+                "pct_respondidas": c.get("pct_respondidas") if c.get("pct_respondidas") is not None else "s/d",
+                "tiempo_respuesta_promedio_dias": c.get("tiempo_respuesta_promedio_dias") if c.get("tiempo_respuesta_promedio_dias") is not None else "s/d",
+                "fecha_extraccion": fecha_extraccion,
+                "error": c.get("error") or "",
+            })
+            if c.get("error"):
+                print(f"    Calidad de servicio: {c['error']}", flush=True)
+            time.sleep(REQUEST_DELAY_SECONDS)
 
         b = fetch_ios(row.get("app_id_ios", ""))
         ios_rows.append({
@@ -318,7 +328,7 @@ def main():
         if b.get("error") and not is_empty(row.get("app_id_ios", "")):
             print(f"    iOS: {b['error']}", flush=True)
 
-        if not args.skip_icons:
+        if not args.skip_icons and not args.semanal:
             icono_url = a.get("icono_url") or b.get("icono_url")
             if icono_url:
                 b64, icon_err = descargar_icono_b64(icono_url)
@@ -331,6 +341,27 @@ def main():
                 print("    Icono: sin URL (ni Android ni iOS trajeron un icono este mes)", flush=True)
 
         time.sleep(REQUEST_DELAY_SECONDS)
+
+    if args.semanal:
+        import os
+        os.makedirs("semanal", exist_ok=True)
+        android_path = os.path.join("semanal", f"datos_{fecha_extraccion}.csv")
+        ios_path = os.path.join("semanal", f"datos_{fecha_extraccion}_ios.csv")
+        with open(android_path, "w", newline="", encoding="utf-8") as f:
+            writer = csv.DictWriter(f, fieldnames=ANDROID_FIELDS)
+            writer.writeheader()
+            writer.writerows(android_rows)
+        with open(ios_path, "w", newline="", encoding="utf-8") as f:
+            writer = csv.DictWriter(f, fieldnames=IOS_FIELDS)
+            writer.writeheader()
+            writer.writerows(ios_rows)
+        fallos_android = sum(1 for r in android_rows if r["error"])
+        fallos_ios = sum(1 for r in ios_rows if r["error"] and not is_empty(r["app_id_ios"]))
+        con_rating = sum(1 for r in android_rows if r["rating"] != "s/d")
+        print(f"\nListo (semanal): {android_path} ({len(android_rows)} apps, {con_rating} con rating, "
+              f"{fallos_android} con error/s-d)")
+        print(f"Listo (semanal): {ios_path} ({len(ios_rows)} apps, {fallos_ios} con error/s-d)")
+        return
 
     android_path = f"datos_{month_str}.csv"
     ios_path = f"datos_{month_str}_ios.csv"
