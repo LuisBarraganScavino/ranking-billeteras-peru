@@ -1,0 +1,56 @@
+name: Captura semanal de billeteras
+
+on:
+  schedule:
+    # Todos los lunes a las 14:00 UTC = 09:00 hora Perú (UTC-5).
+    # La carga a la base de datos (FinPodium-Web) corre a las 10:15 hora Perú del mismo lunes.
+    - cron: "0 14 * * 1"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ranking-semanal
+  cancel-in-progress: false
+
+jobs:
+  captura:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Instalar dependencias
+        run: pip install -r requirements.txt
+
+      - name: Capturar datos de la semana
+        run: python extract_ranking.py --semanal
+
+      - name: Verificar que se generaron los archivos
+        run: |
+          f="semanal/datos_$(date -u +%Y-%m-%d).csv"
+          test -s "$f" || { echo "::error::No se generó $f"; exit 1; }
+          total=$(($(wc -l < "$f") - 1))
+          sin_dato=$(grep -c ",s/d," "$f" || true)
+          echo "Filas: $total · filas con algún s/d: $sin_dato"
+          test "$total" -ge 1 || { echo "::error::El archivo no tiene filas"; exit 1; }
+
+      - name: Commit y push de la captura semanal
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add semanal/
+          git diff --cached --quiet && { echo "Sin cambios que guardar."; exit 0; }
+          git commit -m "Captura semanal billeteras $(date -u +%Y-%m-%d)"
+          for i in 1 2 3; do
+            git pull --rebase origin "${GITHUB_REF_NAME}" && git push && exit 0
+            echo "Reintento $i…"; sleep 10
+          done
+          echo "::error::No se pudo hacer push de la captura semanal"; exit 1
