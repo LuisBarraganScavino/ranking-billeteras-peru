@@ -1,0 +1,55 @@
+nombre,institucion,servicio,app_id_android,rating,num_resenas,instalaciones,instalaciones_reales,categoria,desarrollador,version,es_gratis,fecha_lanzamiento,fecha_actualizacion,fecha_extraccion,error,hist_1,hist_2,hist_3,hist_4,hist_5,novedades
+Alfin Banco,Intercorp,Prepago,com.alfinbanco.appclientes,2.55,285,100.000+,212518,Finanzas,Alfin Banco,2.9.11,True,31 ene 2022,2026-10-16,2026-11-18,,155,8,19,5,93,s/d
+B89,Fintech,Prepago,io.b89.berlin,s/d,s/d,s/d,s/d,s/d,s/d,s/d,s/d,s/d,s/d,2026-11-18,app no encontrada (retirada de la tienda o app_id incorrecto),s/d,s/d,s/d,s/d,s/d,s/d
+BanBif App,Banco,Banca movil,pe.com.banbif.pnappmobile,4.77665,3718,100.000+,257953,Finanzas,Banco Interamericano de Finanzas,1.0.21,True,10 oct 2025,2026-10-30,2026-11-18,,55,46,84,292,3236,s/d
+Banca Movil Banca GNB,Banco,Banca movil,com.bm_gnb_pe,3.43,517,100.000+,101573,Finanzas,Banco GNB - Perú,1.8.31,True,28 sept 2018,2026-10-16,2026-11-18,,159,30,20,35,267,s/d
+Banca Móvil BCP,Banco,Banca movil,com.bcp.bank.bcp,4.6801524,781458,10.000.000+,31842013,Finanzas,Banco de Crédito del Perú,5.15.2,True,17 ene 2014,2026-10-25,2026-11-18,,25044,8120,23577,78247,646466,s/d
+Banco de Comercio BANCOM,Banco,Banca movil,pe.com.bancomercio.mobilebanking,3.1089108,569,100.000+,112757,Finanzas,Bancom Perú,Varies with device,True,22 jun 2017,s/d,2026-11-18,,253,5,10,21,275,s/d
+Banco de la Nación,Banco,Banca movil,pe.com.bn.app.bancodelanacion,3.2908292,59589,10.000.000+,10398212,Finanzas,Banco de la Nación,4.6.0,True,6 dic 2017,2025-10-23,2026-11-18,,20419,3189,3179,4236,28561,s/d
+Banco Falabella Perú,Banco,Banca movil,per.bf.desa,2.4169278,22453,1.000.000+,4563613,Finanzas,Banco Falabella Perú,2.86.0,True,13 mar 2017,2026-11-09,2026-11-18,,12789,1407,743,1125,6384,s/d
+Banco Pichincha Perú,Banco,Banca movil,pe.pichincha.bm,3.4270833,3923,500.000+,625503,Finanzas,Banco Pichincha,2.11.0,True,2 jul 2020,2026-11-04,2026-11-18,,1205,162,234,387,1930,s/d
+Banco Ripley Perú,Banco,Banca movil,com.ripley.banco.peru,3.4450705,17973,1.000.000+,2539281,Finanzas,Banco Ripley Perú,6.40.1,True,18 sept 2018,2026-10-15,2026-11-18,,5588,758,768,1771,9082,s/d
+BBVA Perú,Banco,Banca movil,com.bbva.nxt_peru,4.3171873,568459,10.000.000+,15779261,Finanzas,BBVA,26.90.4,True,23 oct 2012,2026-11-10,2026-11-18,,64512,12703,20392,51199,419648,s/d
+BIM,PDP S.A.,Billetera celular,com.pdp.bim,3.3769023,11334,5.000.000+,5092284,Finanzas,Pagos Digitales Peruanos S.A.,3.1.55,True,14 feb 2018,2026-10-24,2026-11-18,,3854,405,435,882,5752,s/d
+BIpay,Bitel,Billetera digital,com.bitel.bipay,2.3003802,7995,1.000.000+,3311673,Finanzas,Bitel,1.3.93,True,31 jul 2023,2026-11-07,2026-11-18,,4732,465,425,405,1965,s/d
+Bonus,Retail (Loyalty Perú),Prepago,com.bonus.bonus,1.6666666,1285,100.000+,415581,Productividad,Loyalty Perú,2.1.0,True,8 ago 2024,2026-10-08,2026-11-18,,1019,40,20,40,163,s/d
+Caja Arequipa,Caja Municipal,Consulta de saldos y pagos,com.cmac.cajamovilaqp,4.7984915,27768,1.000.000+,1594075,Finanzas,Caja Arequipa,4.56.0,True,4 nov 2016,2026-10-13,2026-11-18,,1016,209,259,378,25902,s/d
+Caja Cusco - Wayki App,Caja Municipal,Consulta de saldos y pagos,com.pe.cajacusco.movil,3.2783506,1965,1.000.000+,1069961,Finanzas,CAJA CUSCO S.A,2.10.0,True,27 dic 2019,2026-09-26,2026-11-18,,708,91,40,192,930,s/d
+Caja Huancayo App,Caja Municipal,Consulta de saldos y pagos,com.cajahuancayo.cajahuancayo.appcajahuancayo,2.8035595,15340,1.000.000+,1784958,Finanzas,Caja Huancayo,2.0.8,True,1 ago 2018,2026-10-01,2026-11-18,,7189,899,625,979,5641,s/d
+Caja Ica App,Caja Municipal,Consulta de saldos y pagos,com.cmacica.prd,3.13,789,100.000+,254649,Finanzas,Caja Municipal Ica,3.28,True,18 jul 2020,2026-10-13,2026-11-18,,283,31,101,39,331,s/d
+Caja Piura App,Caja Municipal,Consulta de saldos y pagos,pe.cajapiura.bancamovil,4.132379,5598,1.000.000+,1207095,Finanzas,Caja Piura,1.17.0.3,True,31 dic 2019,2026-11-11,2026-11-18,,1011,109,99,279,4095,s/d
+Caja Tacna App,Caja Municipal,Consulta de saldos y pagos,com.cajatacna.droid,3.48,203,50.000+,73966,Finanzas,CMAC TACNA S.A.,1.10.0,True,5 jul 2017,2026-11-12,2026-11-18,,58,14,4,22,103,s/d
+Caja Trujillo,Caja Municipal,Consulta de saldos y pagos,com.appcajatrujillo,2.4318182,1340,500.000+,529545,Finanzas,Caja Trujillo development team,1.12.01,True,19 nov 2019,2026-11-06,2026-11-18,,781,60,30,70,395,s/d
+Banco Compartamos,Banco,Consulta de saldos y pagos,pe.com.compartamos.bancamovil,3.319079,3239,1.000.000+,1812920,Finanzas,Compartamos Banco,3.2.3,True,18 abr 2018,2026-11-11,2026-11-18,,1118,138,159,234,1586,s/d
+Coopac Abaco,Cooperativa,Consulta de saldos y pagos,com.abaco.movil,4.5,53,5.000+,8129,Finanzas,Cooperativa de Ahorro y Crédito Abaco,1.6.1,True,25 nov 2017,2026-03-28,2026-11-18,,5,0,1,3,42,s/d
+Coopac San Cristobal de Huamanga,Cooperativa,Consulta de saldos y pagos,org.cacsch.saldomatico,3.4479167,97,10.000+,34957,Finanzas,CAC San Cristóbal de Huamanga,Varies with device,True,16 mar 2018,s/d,2026-11-18,,28,4,9,7,48,s/d
+Coopac San Isidro,Cooperativa,Consulta de saldos y pagos,pe.coopac.huaral.app_banking,4.185185,29,5.000+,5974,Finanzas,Cooperativa San Isidro,Varies with device,True,1 sept 2020,s/d,2026-11-18,,4,0,1,4,19,s/d
+Coopac San Miguel,Cooperativa,Consulta de saldos y pagos,pe.com.bankingly.Pe_SanMiguel,s/d,s/d,500+,985,Finanzas,Coopac San Miguel,Varies with device,True,20 jul 2025,s/d,2026-11-18,,s/d,s/d,s/d,s/d,s/d,s/d
+Coopac Santa Maria Movil,Cooperativa,Consulta de saldos y pagos,pe.com.coopsantamariaenlinea.coopemovilsmm,4.72,151,10.000+,24469,Finanzas,Cooperativa Ahorro y Credito Santa María Magdalena,3.0.9,True,5 feb 2016,2025-08-25,2026-11-18,,9,0,3,0,138,s/d
+Santander Consumer Perú,"Financiera (Grupo Santander, ex CrediScotia)",Consulta de saldos y pagos,pe.com.scotiabank.blpm.android.client.csf,2.49,1051,1.000.000+,1008921,Finanzas,Santander Consumer Bank Peru,3.2.0,True,16 dic 2020,2026-08-05,2026-11-18,,587,52,52,20,336,s/d
+Cuenta DNI Perú (Banco de la Nación),Banco de la Nación,Consulta de saldos,com.bnp.banking,3.05,40,10.000+,34203,Finanzas,Banco de la Nación,4.0.7,True,30 nov 2022,2026-06-11,2026-11-18,,15,2,4,4,15,s/d
+Diners Club Perú,Tarjeta de Crédito,App tarjeta de crédito,pe.solera.diners,4.760292,15349,500.000+,518064,Finanzas,Diners Club Perú S.A.,8.8.3,True,17 nov 2017,2026-10-26,2026-11-18,,519,40,224,1028,13534,s/d
+Financiera Confianza,Financiera,Consulta de saldos y pagos,pe.confianza.cliente,2.7821782,345,100.000+,443139,Finanzas,Financiera Confianza,2.6.2,True,29 abr 2024,2026-11-13,2026-11-18,,170,10,13,23,126,s/d
+Efectibank,Financiera,Billetera Digital,com.efectivadigital.appclientes,2.5042734,1191,500.000+,782538,Finanzas,Banco Efectiva S.A.,2.0.6,True,18 mar 2022,2026-10-30,2026-11-18,,651,50,61,91,335,s/d
+Global66,Fintech chilena (Global 81),Multi-moneda,com.global66.cards,4.7644567,90742,1.000.000+,3422199,Finanzas,Global66,5.28.1,True,10 feb 2020,2026-11-17,2026-11-18,,2808,255,1532,6262,79856,s/d
+Inspira te Ilumina,Educación financiera (Sof.ia),App educativa,com.sofia.inspira,4.5308642,81,100.000+,106622,Educación,SofiaTech,3.1.10,True,19 dic 2022,2026-03-02,2026-11-18,,4,2,3,10,62,s/d
+Interbank App,Banco,Banca movil,pe.com.interbank.mobilebanking,4.4436255,274520,10.000.000+,13941908,Finanzas,Banco Internacional del Peru,23.7.2,True,7 jun 2011,2026-11-11,2026-11-18,,24765,4500,8092,23980,213176,s/d
+io,Banco (marca digital BCP),Banca movil,pe.io,4.749004,7543,500.000+,739649,Finanzas,Banco de Credito del Peru,3.8.47,True,23 abr 2023,2026-11-12,2026-11-18,,220,69,99,600,6551,s/d
+Jet Cash,EEDE Jet Perú,Remesas de dinero,com.mobilcash.jetperuandroid,3.4,96,10.000+,25972,Finanzas,MobilCash LC,3.7,True,21 jun 2018,2026-01-21,2026-11-18,,33,2,2,2,53,s/d
+Kontigo,EEDE Gmoney,Prepago,pe.com.kontigo.neobank,3.0350878,58,10.000+,13086,Finanzas,GMoney S.A,3.6.3,True,27 may 2021,2024-04-25,2026-11-18,,24,3,3,1,26,s/d
+Ligo,EEDE TPP (Tarjetas Peruanas Prepago),Prepago,pe.com.tarjetasperuanasprepago.tppapp,3.640845,5955,1.000.000+,1229679,Finanzas,EEDE Tarjetas Peruanas Prepago,5.7.0,True,3 oct 2019,2026-10-27,2026-11-18,,1540,282,303,471,3354,s/d
+Mibanco,Banco,Banca movil,com.mibanco.bancamovil,2.831361,6983,1.000.000+,2434165,Finanzas,Mibanco Móvil Perú,4.14.4,True,8 mar 2019,2026-11-13,2026-11-18,,3315,299,309,361,2695,s/d
+Máximo Tarjeta,Fintech (Alfin Banco),Prepago,maximo.peru.pe,3.7407408,1838,100.000+,147706,Finanzas,Máximo Pay,Varies with device,True,12 may 2020,s/d,2026-11-18,,476,11,101,169,1077,s/d
+P51,Caja Arequipa,Wallet,com.cajaarq.p51,2.4,195,50.000+,91070,Finanzas,Caja Arequipa,Varies with device,True,18 sept 2024,s/d,2026-11-18,,104,15,15,7,49,s/d
+Pacinet Móvil,Cooperativa,Consulta de saldos y pagos,com.pacinetmobile,4.5373135,74,10.000+,19442,Finanzas,Cooperativa de Ahorro y Crédito Pacífico,Varies with device,True,4 nov 2018,2025-09-17,2026-11-18,,6,0,2,3,61,s/d
+Prex Perú,Fintech,Prepago,air.PrexPeru,4.714087,37082,1.000.000+,2885133,Finanzas,PREX HOLDING S.A.S.,10.75.01,True,1 jun 2021,2026-11-02,2026-11-18,,877,288,1176,3871,30866,s/d
+Qapaq,Financiera,Consulta de saldos y pagos,com.qapaq.banking,2.81,121,50.000+,71338,Finanzas,R.U.C. 20521308321,Varies with device,True,12 ago 2020,s/d,2026-11-18,,57,4,5,5,45,s/d
+Scotiabank Perú App,Banco,Banca movil,pe.com.scotiabank.blpm.android.client,2.369583,53823,5.000.000+,7922973,Finanzas,Scotiabank Perú,10.4.5,True,9 sept 2011,2026-11-10,2026-11-18,,31597,2833,2353,1972,15062,s/d
+Sip,Infinance XP (grupo Intercorp),"Billetera digital (cuentas, tarjetas, ahorros, cashback)",pe.solera.tarjetaoh,4.2684417,28780,5.000.000+,5500804,Finanzas,InFinance XP,5.11.0,True,24 may 2016,2026-10-14,2026-11-18,,3831,714,880,1822,21529,s/d
+Tarjeta W,Grupo Wong,Pagos QR y Transferencias,pe.com.tarjetaw.android.client.prod,2.74,295,500.000+,534381,Finanzas,Centro Comercial Plaza Norte,1.16.0,True,31 jul 2023,2026-10-27,2026-11-18,,147,8,17,14,106,s/d
+Tulkit,Fintech,Consulta de saldos y pagos,com.tulkitpay.crypto,3.2,182,100.000+,105001,Finanzas,Tulkit Pay S.A.C.,2.0.15,True,25 mar 2024,2026-10-20,2026-11-18,,61,19,5,8,84,s/d
+Yape,BCP,Pagos por celular P2P,com.bcp.innovacxion.yapeapp,4.304568,782447,50.000.000+,50490625,Finanzas,Banco de Credito del Peru,3.70.1,True,5 sept 2016,2026-11-13,2026-11-18,,80320,23317,37859,77179,563767,s/d
+Panda,GMoney S.A.,Billetera digital multimoneda,pe.com.panda.neobank,3.5113637,88,10.000+,38206,Finanzas,GMoney S.A,1.18.0,True,20 jul 2023,2026-10-22,2026-11-18,,26,2,6,9,45,s/d
+Lemon: Billetera Virtual,Lemon Cash Inc.,Cripto-billetera,com.applemoncash,3.6066012,45874,5.000.000+,7692165,Finanzas,Lemon Cash Inc,3.0.22,True,5 may 2023,2026-11-17,2026-11-18,,11946,2247,2657,4049,24961,s/d
+Coopac Norandino WalletOn,Coopac Norandino / FENACREP,Billetera digital cooperativa,com.wdt.banking.norandino,3.65,21,10.000+,12007,Finanzas,Coopac Norandino Ltda,3.1.4,True,10 abr 2021,2026-10-21,2026-11-18,,5,1,1,2,11,s/d
+Takenos,Takenos (fintech argentina),Cuenta multimoneda para freelancers,com.takenos,4.32,4562,1.000.000+,1330696,Finanzas,Takenos,4.26.5,True,25 jul 2024,2026-11-06,2026-11-18,,593,45,91,410,3421,s/d
