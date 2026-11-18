@@ -29,20 +29,29 @@ con las demás — un solo fallo nunca detiene la corrida completa. Lo mismo apl
 icono: si no se puede descargar o procesar, esa app simplemente no aparece en el JSON
 de iconos y el dashboard usa un avatar de respaldo.
 
+Modo semanal (captura para detectar patrones de comportamiento; lo corre ranking-semanal.yml cada lunes):
+  python extract_ranking.py --semanal
+  Solo Android e iOS (rating, reseñas, instalaciones, versión). No descarga iconos ni mide calidad de servicio
+  (eso sigue siendo mensual). Escribe semanal/datos_AAAA-MM-DD.csv y semanal/datos_AAAA-MM-DD_ios.csv con las
+  mismas columnas de los archivos mensuales, más las variables que explican las variaciones de rating:
+    Android: distribución de estrellas (hist_1..hist_5) y texto de «novedades» de la versión.
+    iOS: versión y texto de «novedades».
+  Además escribe semanal/resenas_AAAA-MM-DD.csv con una muestra de las reseñas más recientes de Android (todas las
+  estrellas: fecha, estrellas, versión de la app, si el desarrollador respondió). No guarda el nombre de quien reseña.
+  Con esa muestra la base detecta campañas de reseñas (muchas reseñas nuevas sin instalaciones nuevas) y reseñas
+  que desaparecen entre una semana y otra. Para otro país, ver el README.
+
 Uso:
   python extract_ranking.py                  # usa el mes actual (UTC)
   python extract_ranking.py --month 2026-08   # fuerza un mes (pruebas / backfill)
-  python extract_ranking.py --semanal         # captura semanal: solo Android + iOS, sin iconos
-                                              # ni calidad de servicio; escribe en semanal/
-                                              #   semanal/datos_YYYY-MM-DD.csv
-                                              #   semanal/datos_YYYY-MM-DD_ios.csv
-                                              # (YYYY-MM-DD = fecha de la captura)
+  python extract_ranking.py --semanal         # captura semanal (carpeta semanal/)
 """
 import argparse
 import csv
 import datetime
 import io
 import json
+import os
 import sys
 import time
 
@@ -74,6 +83,13 @@ IOS_FIELDS = ["nombre", "institucion", "servicio", "app_id_ios",
               "rating", "num_resenas", "categoria", "desarrollador", "es_gratis",
               "fecha_lanzamiento", "fecha_actualizacion_version",
               "fecha_extraccion", "error"]
+# Solo en la captura semanal (los CSV mensuales no cambian): variables que explican las variaciones de rating
+ANDROID_FIELDS_SEMANAL = ANDROID_FIELDS + ["hist_1", "hist_2", "hist_3", "hist_4", "hist_5", "novedades"]
+IOS_FIELDS_SEMANAL = IOS_FIELDS + ["version", "novedades"]
+RESENAS_FIELDS = ["nombre", "app_id_android", "resena_id", "estrellas", "fecha_resena", "version_app",
+                  "util", "respondida", "fecha_respuesta", "texto", "fecha_extraccion"]
+RESENAS_MUESTRA_COUNT = 200   # reseñas más recientes por app (todas las estrellas) en la captura semanal
+RESENAS_TEXTO_MAX = 300       # caracteres máximos que se guardan del texto de cada reseña
 CALIDAD_FIELDS = ["nombre", "institucion", "servicio", "app_id_android",
                    "resenas_1estrella_analizadas", "resenas_1estrella_respondidas",
                    "pct_respondidas", "tiempo_respuesta_promedio_dias",
@@ -114,6 +130,8 @@ def fetch_android(app_id):
             "fecha_lanzamiento": data.get("released"),
             "fecha_actualizacion": fecha_actualizacion,
             "icono_url": data.get("icon"),
+            "histograma": data.get("histogram"),        # [nº de 1★, 2★, 3★, 4★, 5★]
+            "novedades": data.get("recentChanges"),     # texto de «novedades» de la versión
             "error": None,
         }
     except NotFoundError:
@@ -150,6 +168,8 @@ def fetch_ios(app_id):
             "fecha_lanzamiento": fecha(result.get("releaseDate")),
             "fecha_actualizacion_version": fecha(result.get("currentVersionReleaseDate")),
             "icono_url": result.get("artworkUrl512") or result.get("artworkUrl100"),
+            "version": result.get("version"),
+            "novedades": result.get("releaseNotes"),
             "error": None,
         }
     except Exception as e:  # noqa: BLE001
@@ -207,6 +227,47 @@ def fetch_calidad_servicio(app_id, count=RESENAS_1ESTRELLA_COUNT):
         return {"error": f"error: {e}"}
 
 
+def _limpiar_texto(v, maximo=None):
+    """Texto en una sola línea (para CSV), sin saltos ni espacios repetidos, recortado."""
+    if not v:
+        return ""
+    t = " ".join(str(v).split())
+    return t[:maximo] if maximo else t
+
+
+def _iso(dt):
+    return dt.isoformat(timespec="seconds") if dt else ""
+
+
+def fetch_resenas_muestra(app_id, count=RESENAS_MUESTRA_COUNT):
+    """Muestra de las reseñas más recientes de una app de Google Play (todas las estrellas).
+    Devuelve (lista_de_filas, error). No guarda el nombre de quien reseña. Si falla, devuelve
+    ([], motivo) y la corrida sigue: nunca se inventa un dato."""
+    if is_empty(app_id):
+        return [], "sin app_id"
+    try:
+        result, _ = gplay_reviews(app_id, lang=LANG, country=COUNTRY, sort=gplay_sort.NEWEST, count=count)
+        filas = []
+        for r in result:
+            if not r.get("reviewId") or r.get("score") is None:
+                continue
+            filas.append({
+                "resena_id": r["reviewId"],
+                "estrellas": r["score"],
+                "fecha_resena": _iso(r.get("at")),
+                "version_app": r.get("reviewCreatedVersion") or "",
+                "util": r.get("thumbsUpCount") if r.get("thumbsUpCount") is not None else "",
+                "respondida": "1" if r.get("replyContent") else "0",
+                "fecha_respuesta": _iso(r.get("repliedAt")),
+                "texto": _limpiar_texto(r.get("content"), RESENAS_TEXTO_MAX),
+            })
+        return filas, None
+    except NotFoundError:
+        return [], "app no encontrada (retirada de la tienda o app_id incorrecto)"
+    except Exception as e:  # noqa: BLE001 - un fallo puntual no debe tumbar la corrida
+        return [], f"error: {e}"
+
+
 def descargar_icono_b64(url):
     """Descarga un icono, lo reduce a ICON_MAX_SIZE px y lo devuelve como data URI base64.
     Devuelve (b64_o_None, motivo_de_error_o_None) — nunca detiene la corrida ni el resto de
@@ -234,13 +295,22 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--month", default=None,
                          help="Mes a extraer en formato YYYY-MM (default: mes actual, UTC).")
-    parser.add_argument("--semanal", action="store_true",
-                         help="Captura semanal: guarda solo Android e iOS en semanal/ con la fecha "
-                              "del día (sin iconos ni calidad de servicio). Sin esta opción el "
-                              "script funciona exactamente igual que antes.")
     parser.add_argument("--skip-icons", action="store_true",
                          help="No descargar iconos (corre más rápido, útil para pruebas).")
+    parser.add_argument("--semanal", action="store_true",
+                         help="Captura semanal: solo Android e iOS, sin iconos ni calidad de servicio; escribe en semanal/.")
+    parser.add_argument("--sin-resenas", action="store_true",
+                         help="Con --semanal: no toma la muestra de reseñas (corre más rápido; útil para pruebas).")
+    parser.add_argument("--fecha", default=None,
+                         help="Con --semanal: fecha de la captura YYYY-MM-DD (default: hoy, UTC). Para pruebas.")
     args = parser.parse_args()
+    semanal = args.semanal
+
+    if args.fecha:
+        try:
+            datetime.datetime.strptime(args.fecha, "%Y-%m-%d")
+        except ValueError:
+            sys.exit(f"--fecha debe tener formato YYYY-MM-DD, recibido: {args.fecha}")
 
     if args.month:
         try:
@@ -252,7 +322,7 @@ def main():
         month_str = datetime.date.today().strftime("%Y-%m")
 
     catalog = load_catalog()
-    fecha_extraccion = datetime.date.today().isoformat()
+    fecha_extraccion = args.fecha or datetime.date.today().isoformat()
 
     print(f"Pillow disponible (necesario para procesar iconos): {HAS_PIL}", flush=True)
     if not HAS_PIL:
@@ -262,6 +332,7 @@ def main():
     android_rows = []
     ios_rows = []
     calidad_rows = []
+    resenas_rows = []
     iconos = {}
 
     for i, row in enumerate(catalog, start=1):
@@ -287,11 +358,27 @@ def main():
             "fecha_extraccion": fecha_extraccion,
             "error": a.get("error") or "",
         })
+        if semanal:
+            h = a.get("histograma") or []
+            # google-play-scraper devuelve [0, 0, 0, 0, 0] cuando no logra leer la distribución: eso es «sin dato», no «cero calificaciones»
+            hist_valido = len(h) == 5 and all(x is not None for x in h) and sum(h) > 0
+            for k in range(5):
+                android_rows[-1][f"hist_{k + 1}"] = h[k] if hist_valido else "s/d"
+            android_rows[-1]["novedades"] = _limpiar_texto(a.get("novedades"), 500) or "s/d"
         if a.get("error"):
             print(f"    Android: {a['error']}", flush=True)
         time.sleep(REQUEST_DELAY_SECONDS)
 
-        if not args.semanal:
+        if semanal and not args.sin_resenas and not a.get("error"):
+            filas, err = fetch_resenas_muestra(row.get("app_id_android", ""))
+            for fila in filas:
+                resenas_rows.append({"nombre": nombre, "app_id_android": row.get("app_id_android", ""),
+                                     "fecha_extraccion": fecha_extraccion, **fila})
+            if err:
+                print(f"    Muestra de reseñas: {err}", flush=True)
+            time.sleep(REQUEST_DELAY_SECONDS)
+
+        if not semanal:
             c = fetch_calidad_servicio(row.get("app_id_android", ""))
             calidad_rows.append({
                 "nombre": nombre,
@@ -325,10 +412,13 @@ def main():
             "fecha_extraccion": fecha_extraccion,
             "error": b.get("error") or "",
         })
+        if semanal:
+            ios_rows[-1]["version"] = b.get("version") or "s/d"
+            ios_rows[-1]["novedades"] = _limpiar_texto(b.get("novedades"), 500) or "s/d"
         if b.get("error") and not is_empty(row.get("app_id_ios", "")):
             print(f"    iOS: {b['error']}", flush=True)
 
-        if not args.skip_icons and not args.semanal:
+        if not args.skip_icons and not semanal:
             icono_url = a.get("icono_url") or b.get("icono_url")
             if icono_url:
                 b64, icon_err = descargar_icono_b64(icono_url)
@@ -342,25 +432,29 @@ def main():
 
         time.sleep(REQUEST_DELAY_SECONDS)
 
-    if args.semanal:
-        import os
+    if semanal:
         os.makedirs("semanal", exist_ok=True)
         android_path = os.path.join("semanal", f"datos_{fecha_extraccion}.csv")
         ios_path = os.path.join("semanal", f"datos_{fecha_extraccion}_ios.csv")
         with open(android_path, "w", newline="", encoding="utf-8") as f:
-            writer = csv.DictWriter(f, fieldnames=ANDROID_FIELDS)
+            writer = csv.DictWriter(f, fieldnames=ANDROID_FIELDS_SEMANAL)
             writer.writeheader()
             writer.writerows(android_rows)
         with open(ios_path, "w", newline="", encoding="utf-8") as f:
-            writer = csv.DictWriter(f, fieldnames=IOS_FIELDS)
+            writer = csv.DictWriter(f, fieldnames=IOS_FIELDS_SEMANAL)
             writer.writeheader()
             writer.writerows(ios_rows)
+        if not args.sin_resenas:
+            resenas_path = os.path.join("semanal", f"resenas_{fecha_extraccion}.csv")
+            with open(resenas_path, "w", newline="", encoding="utf-8") as f:
+                writer = csv.DictWriter(f, fieldnames=RESENAS_FIELDS)
+                writer.writeheader()
+                writer.writerows(resenas_rows)
+            print(f"Listo: {resenas_path} ({len(resenas_rows)} reseñas)")
         fallos_android = sum(1 for r in android_rows if r["error"])
         fallos_ios = sum(1 for r in ios_rows if r["error"] and not is_empty(r["app_id_ios"]))
-        con_rating = sum(1 for r in android_rows if r["rating"] != "s/d")
-        print(f"\nListo (semanal): {android_path} ({len(android_rows)} apps, {con_rating} con rating, "
-              f"{fallos_android} con error/s-d)")
-        print(f"Listo (semanal): {ios_path} ({len(ios_rows)} apps, {fallos_ios} con error/s-d)")
+        print(f"\nListo: {android_path} ({len(android_rows)} apps, {fallos_android} con error/s-d)")
+        print(f"Listo: {ios_path} ({len(ios_rows)} apps, {fallos_ios} con error/s-d)")
         return
 
     android_path = f"datos_{month_str}.csv"
